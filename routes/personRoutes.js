@@ -39,6 +39,8 @@ router.get('/', async (req, res) => {
     }
 })
 
+
+//Get one
 router.get('/:id', async (req, res) => {
 
   const id = req.params.id
@@ -55,6 +57,31 @@ router.get('/:id', async (req, res) => {
   } catch (error) {
     res.status(500).json({error: error})
   }
+})
+
+//Update
+
+router.patch('/:id', async (req,res) => {
+
+  const id = req.params.id
+  const { name, salary, approved } = req.body
+  const person = {
+    name,
+    salary,
+    approved
+  }
+
+  try {
+    const updatedPerson = await Person.updateOne({_id : id}, person)
+
+    if (updatedPerson.matchedCount === 0){
+      res.status(422).json({message: 'Person not found!'})
+    }
+    res.status(200).json(person)
+  } catch (error) {
+    res.status(500).json({error: error})
+  }
+
 })
 
 module.exports = router
