@@ -2,13 +2,14 @@ const router = require('express').Router()
 
 const Person = require('../models/Person')
 
+const MSG_PERSON_NOT_FOUND = 'Person not found!'
 
 // rota de post
 router.post('/', async (req, res) => {
     const { name, salary, approved } = req.body
 
     if(!name){
-        res.status(422).json({error: "O nome é obrigatório!"})
+        res.status(422).json({error: "Name is mandatory"})
         return
     }
 
@@ -21,7 +22,7 @@ router.post('/', async (req, res) => {
     try {
       await Person.create(person)
 
-      res.status(201).json({ message: 'Pessoa inserida no sistema com sucesso!' })
+      res.status(201).json({ message: 'Person inserted sucessfully' })
     } catch (error) {
       res.status(500).json({ erro: error })
     }
@@ -49,7 +50,7 @@ router.get('/:id', async (req, res) => {
     const person = await Person.findOne({_id: id})
 
     if (!person){
-      res.status(422).json({message: 'Person not found!'})
+      res.status(422).json({message: MSG_PERSON_NOT_FOUND})
       return
     }
 
@@ -75,7 +76,7 @@ router.patch('/:id', async (req,res) => {
     const updatedPerson = await Person.updateOne({_id : id}, person)
 
     if (updatedPerson.matchedCount === 0){
-      res.status(422).json({message: 'Person not found!'})
+      res.status(422).json({message: MSG_PERSON_NOT_FOUND})
     }
     res.status(200).json(person)
   } catch (error) {
@@ -92,7 +93,7 @@ router.delete('/:id', async (req,res) => {
   const person = await Person.findOne({_id: id})
 
   if (!person){
-    res.status(422).json({message: 'Person not found!'})
+    res.status(422).json({message: MSG_PERSON_NOT_FOUND})
     return
   }
 
